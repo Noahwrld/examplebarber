@@ -1,47 +1,34 @@
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function CookieNotice() {
-  const [visible, setVisible] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
-    const consent = localStorage.getItem("bk-cookie-consent");
-    if (!consent) {
-      const t = setTimeout(() => setVisible(true), 1500);
-      return () => clearTimeout(t);
+    const cookieConsent = localStorage.getItem("cookieConsent");
+    if (!cookieConsent) {
+      setIsVisible(true);
     }
   }, []);
 
-  const accept = (level: "all" | "essential") => {
-    localStorage.setItem("bk-cookie-consent", level);
-    setVisible(false);
+  const handleAccept = () => {
+    localStorage.setItem("cookieConsent", "accepted");
+    setIsVisible(false);
   };
 
-  if (!visible) return null;
+  if (!isVisible) return null;
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-50 p-4 md:p-6 animate-fade-up">
-      <div className="max-w-5xl mx-auto bg-ink-soft border border-gold/30 rounded-lg shadow-2xl p-6 flex flex-col md:flex-row items-start md:items-center gap-4">
-        <div className="flex-1">
-          <div className="flex items-center gap-2 mb-2">
-            <span className="text-2xl">🍪</span>
-            <h4 className="text-gold font-display text-lg">We value your privacy</h4>
-          </div>
-          <p className="text-sm text-cream/70 leading-relaxed">
-            We use cookies to enhance your browsing experience, serve personalized content, and analyze our traffic. By clicking "Accept All", you consent to our use of cookies.
-          </p>
-        </div>
-        <div className="flex gap-3 w-full md:w-auto shrink-0">
+    <div className="fixed bottom-0 left-0 right-0 bg-ink-soft border-t border-gold/20 p-4 md:p-6 z-30">
+      <div className="max-w-7xl mx-auto flex justify-between items-center gap-4">
+        <p className="text-sm text-cream/70">
+          We use cookies to enhance your experience. By continuing, you agree to our cookie policy.
+        </p>
+        <div className="flex gap-3">
           <button
-            onClick={() => accept("essential")}
-            className="px-4 py-2 text-sm border border-cream/30 text-cream/80 hover:text-cream hover:border-cream/60 transition-colors"
+            onClick={handleAccept}
+            className="px-6 py-2 bg-gold text-ink font-semibold text-sm hover:bg-gold-light transition whitespace-nowrap"
           >
-            Essential Only
-          </button>
-          <button
-            onClick={() => accept("all")}
-            className="px-5 py-2 text-sm bg-gold text-ink font-semibold hover:bg-gold-light transition-colors"
-          >
-            Accept All
+            Accept
           </button>
         </div>
       </div>
